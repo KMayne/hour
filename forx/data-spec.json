@@ -1,0 +1,6 @@
+{
+  "number": {
+    "type": "counter",
+    "initialValue": 0
+  }
+}

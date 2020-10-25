@@ -1,0 +1,6 @@
+{
+  "name": "Hour",
+  "description": "A web app for planning your time.",
+  "hostname": "hour.kianmayne.co.uk",
+  "dockerOrg": "kianm"
+}
