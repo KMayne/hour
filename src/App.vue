@@ -2,18 +2,18 @@
   <main id="app" class="app-container">
     <section class="backlog-container">
       <h1>Backlog</h1>
-      <ul>
+      <draggable v-model="backlog" group="tasks">
         <li v-for="item in backlog" :key="item.id">{{item.name}}</li>
-      </ul>
+      </draggable>
     </section>
 
     <section class="plan-container">
       <h1>Plan</h1>
-      <template v-for="day in daysToDisplay">
-      <h2 :key="'heading-' + day">{{day.toLocaleString({ weekday: 'long' })}}</h2>
-      <ul :key="'list-' + day">
-        <li v-for="item in getItemsForDay(day)" :key="item.id">{{ item.name }}</li>
-      </ul>
+      <template v-for="day in days">
+      <h2 :key="'heading-' + day">{{day.dateStr}}</h2>
+      <draggable :key="'list-' + day" v-model="day.tasks" group="tasks">
+        <li v-for="item in day.tasks" :key="item.id">{{ item.name }}</li>
+      </draggable>
       </template>
     </section>
   </main>
@@ -22,32 +22,31 @@
 <script lang="ts">
 import Vue from 'vue';
 import { DateTime } from 'luxon';
+import draggable from 'vuedraggable';
 
 export default Vue.extend({
+  components: { draggable },
   data: () => ({
     backlog: [
       { name: 'Item 1', id: 1 },
       { name: 'Item 2', id: 2 },
       { name: 'Item 3', id: 3 }
     ],
-    scheduledItems: [
-      { name: 'Item 4', id: 4, scheduledTime: DateTime.local() },
-      { name: 'Item 5', id: 5, scheduledTime: DateTime.local().plus({ hour: 1 }) },
-      { name: 'Item 6', id: 6, scheduledTime: DateTime.local().plus({ hour: 3, days: 1 }) },
+    days: [{
+        dateStr: '2020-10-31',
+        tasks: [{ name: 'Item 4', id: 4 }]
+      }, {
+        dateStr: '2020-11-01',
+        tasks: [
+          { name: 'Item 5', id: 5 },
+          { name: 'Item 6', id: 6 }
+        ]
+      }
     ]
   }),
   methods: {
-    getItemsForDay(day: DateTime) {
-      return this.scheduledItems.filter(item => item.scheduledTime.hasSame(day, 'day'));
-    }
   },
   computed: {
-    daysToDisplay() {
-      const numDaysToDisplay = 7;
-      const today = DateTime.local().startOf('day');
-      return Array.from({ length: numDaysToDisplay },
-        (_, i) => today.plus({ days: i }));
-    }
   }
 });
 </script>
