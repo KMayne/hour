@@ -2,8 +2,8 @@
   <main id="app" class="app-container">
     <section class="backlog-container">
       <h1>Backlog</h1>
-      <draggable v-model="backlog" group="tasks">
-        <li v-for="item in backlog" :key="item.id">{{item.name}}</li>
+      <draggable tag="ul" class="backlog" v-model="backlog" group="tasks">
+        <li v-for="item in backlog" class="task" :key="item.id">{{item.name}}</li>
       </draggable>
     </section>
 
@@ -11,8 +11,8 @@
       <h1>Plan</h1>
       <template v-for="day in days">
       <h2 :key="'heading-' + day">{{day.dateStr}}</h2>
-      <draggable :key="'list-' + day" v-model="day.tasks" group="tasks">
-        <li v-for="item in day.tasks" :key="item.id">{{ item.name }}</li>
+      <draggable tag="ol" class="task-list" :key="'list-' + day" v-model="day.tasks" group="tasks">
+        <li v-for="item in day.tasks" class="task" :key="item.id">{{ item.name }}</li>
       </draggable>
       </template>
     </section>
@@ -54,7 +54,7 @@ export default Vue.extend({
 <style>
 .app-container {
   height: 100vh;
-  width: 100vh;
+  width: 100vw;
   display: flex;
   flex-direction: row;
   font-family: sans-serif;
@@ -71,5 +71,17 @@ main > section {
 
 main > section > ul {
   text-align: left;
+}
+
+.backlog, .task-list {
+  list-style: none;
+  padding: 0;
+}
+
+.task {
+    border: 1px solid black;
+    border-radius: 3px;
+    margin: 8px;
+    padding: 4px;
 }
 </style>
