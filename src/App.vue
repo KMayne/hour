@@ -35,10 +35,27 @@ import Vue from 'vue';
 import { DateTime } from 'luxon';
 import draggable from 'vuedraggable';
 
+interface AppState {
+  modalActive: boolean;
+  taskForm: {
+    name: string;
+    minuteEstimate?: undefined
+  },
+  taskData: {
+    backlog: Task[];
+    days: Day[]
+  }
+}
+
 interface Task {
-  id: number;
+  id: string;
   name: string;
   minuteEstimate?: number;
+}
+
+interface Day {
+  dateStr: string;
+  tasks: Task[]
 }
 
 const initialFormState = {
@@ -54,21 +71,23 @@ function uuidv4() {
 
 export default Vue.extend({
   components: { draggable },
-  data: () => ({
-    modalActive: false,
-    taskForm: { ...initialFormState },
-    taskData: {
-      backlog: [],
-      days: [{
-          dateStr: 'Today',
-          tasks: []
-        }, {
-          dateStr: 'Tomorrow',
-          tasks: []
-        }
-      ]
-    }
-  }),
+  data(): AppState {
+    return {
+      modalActive: false,
+      taskForm: { ...initialFormState },
+      taskData: {
+        backlog: [],
+        days: [{
+            dateStr: 'Today',
+            tasks: []
+          }, {
+            dateStr: 'Tomorrow',
+            tasks: []
+          }
+        ]
+      }
+    };
+  },
   mounted() {
     this.taskData.backlog = JSON.parse(localStorage.getItem('backlog') || '[]');
     this.taskData.days[0].tasks = JSON.parse(localStorage.getItem('todaysTasks') || '[]');
@@ -89,7 +108,7 @@ export default Vue.extend({
   },
   computed: {
     formValid() {
-      return this.taskForm.name && this.taskForm.name !== '';
+      return this.taskForm && this.taskForm.name && this.taskForm.name !== '';
     }
   }
 });
